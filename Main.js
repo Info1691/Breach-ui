@@ -1,80 +1,63 @@
 let breaches = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("breachContainer");
-  const addButton = document.getElementById("addButton");
-
   fetch("breaches.json")
     .then(res => res.json())
     .then(data => {
       breaches = data;
-      renderBreaches();
+      renderList();
     })
-    .catch(err => console.error("Failed to load breaches.json", err));
+    .catch(() => {
+      breaches = [];
+      renderList();
+    });
 
-  addButton.addEventListener("click", () => {
-    const newBreach = {
-      id: Date.now(),
-      tag: "",
-      description: ""
-    };
-    breaches.push(newBreach);
-    renderBreaches();
+  document.getElementById("addButton").addEventListener("click", () => {
+    const input = document.getElementById("newBreachInput");
+    const value = input.value.trim();
+    if (value) {
+      breaches.push(value);
+      input.value = "";
+      renderList();
+    }
   });
 
-  function renderBreaches() {
-    container.innerHTML = "";
-
-    breaches.forEach((breach, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
-
-      const tagInput = document.createElement("input");
-      tagInput.type = "text";
-      tagInput.value = breach.tag;
-      tagInput.placeholder = "Breach Tag (e.g., Misappropriation)";
-      tagInput.oninput = (e) => breaches[index].tag = e.target.value;
-
-      const descInput = document.createElement("textarea");
-      descInput.placeholder = "Brief Description";
-      descInput.value = breach.description;
-      descInput.oninput = (e) => breaches[index].description = e.target.value;
-
-      const saveBtn = document.createElement("button");
-      saveBtn.textContent = "Save";
-      saveBtn.onclick = () => saveBreaches();
-
-      const deleteBtn = document.createElement("button");
-      deleteBtn.textContent = "Delete";
-      deleteBtn.classList.add("delete");
-      deleteBtn.onclick = () => {
-        breaches.splice(index, 1);
-        renderBreaches();
-        saveBreaches();
-      };
-
-      card.appendChild(document.createTextNode("Tag:"));
-      card.appendChild(tagInput);
-      card.appendChild(document.createElement("br"));
-
-      card.appendChild(document.createTextNode("Description:"));
-      card.appendChild(descInput);
-      card.appendChild(document.createElement("br"));
-
-      card.appendChild(saveBtn);
-      card.appendChild(deleteBtn);
-
-      container.appendChild(card);
-    });
-  }
-
-  function saveBreaches() {
-    fetch("save-breaches.json", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(breaches)
-    })
-    .then(() => console.log("Breaches saved"))
-    .catch(err => console.error("Save failed", err));
-  }
+  document.getElementById("exportButton").addEventListener("click", saveBreaches);
 });
+
+function renderList() {
+  const list = document.getElementById("breachList");
+  list.innerHTML = "";
+
+  breaches.forEach((tag, index) => {
+    const li = document.createElement("li");
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = tag;
+    input.addEventListener("change", () => {
+      breaches[index] = input.value.trim();
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.addEventListener("click", () => {
+      breaches.splice(index, 1);
+      renderList();
+    });
+
+    li.appendChild(input);
+    li.appendChild(deleteBtn);
+    list.appendChild(li);
+  });
+}
+
+function saveBreaches() {
+  const blob = new Blob([JSON.stringify(breaches, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "breaches.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
