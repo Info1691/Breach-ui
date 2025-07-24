@@ -1,6 +1,20 @@
 [
-  "Misappropriation of funds",
-  "Failure to disclose beneficiary interest",
-  "Improper indemnity",
-  "Trustee self-dealing"
+  {
+    "category": "Fiduciary Duties",
+    "tag": "Breach of fiduciary duty",
+    "aliases": [
+      "conflicted trustee",
+      "conflict of duties",
+      "failure to act in interest of beneficiaries"
+    ]
+  },
+  {
+    "category": "Statutory Duties",
+    "tag": "Breach of mandatory duty",
+    "aliases": [
+      "failure to comply with trust law",
+      "unlawful delegation",
+      "failure to follow settlor clause"
+    ]
+  }
 ]
