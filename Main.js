@@ -1,68 +1,49 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("addBreachForm");
-  const categoryInput = document.getElementById("category");
-  const tagInput = document.getElementById("tag");
-  const aliasesInput = document.getElementById("aliases");
-  const breachContainer = document.getElementById("breachContainer");
+const form = document.getElementById("breach-form");
+const breachList = document.getElementById("breach-list");
 
-  let breachTags = [];
+window.onload = () => {
+  const stored = JSON.parse(localStorage.getItem("breachTags") || "[]");
+  stored.forEach(addToList);
+};
 
-  // Load breaches from localStorage
-  function loadBreaches() {
-    const saved = localStorage.getItem("breachTags");
-    breachTags = saved ? JSON.parse(saved) : [];
-    renderBreaches();
-  }
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const category = document.getElementById("category").value.trim();
+  const canonical = document.getElementById("canonical").value.trim();
+  const aliases = document.getElementById("aliases").value.trim().split(",").map(a => a.trim());
 
-  // Render breach tags
-  function renderBreaches() {
-    breachContainer.innerHTML = '';
-    breachTags.forEach((entry, index) => {
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>Category:</strong> ${entry.category}<br>
-        <strong>Tag:</strong> ${entry.tag}<br>
-        <strong>Aliases:</strong> ${entry.aliases.join(", ")}
-      `;
+  if (!category || !canonical) return;
 
-      const delBtn = document.createElement("button");
-      delBtn.textContent = "Delete";
-      delBtn.onclick = () => {
-        breachTags.splice(index, 1);
-        saveBreaches();
-      };
+  const breach = { category, canonical, aliases };
+  let breaches = JSON.parse(localStorage.getItem("breachTags") || "[]");
 
-      li.appendChild(delBtn);
-      breachContainer.appendChild(li);
-    });
-  }
+  // Remove if already exists
+  breaches = breaches.filter(b => b.canonical !== canonical);
+  breaches.push(breach);
+  localStorage.setItem("breachTags", JSON.stringify(breaches));
 
-  // Save to localStorage
-  function saveBreaches() {
-    localStorage.setItem("breachTags", JSON.stringify(breachTags));
-    renderBreaches();
-  }
-
-  // Handle form submission
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const category = categoryInput.value.trim();
-    const tag = tagInput.value.trim();
-    const aliases = aliasesInput.value.split(",").map(a => a.trim()).filter(a => a);
-
-    if (!category || !tag) return;
-
-    const existing = breachTags.find(b => b.tag.toLowerCase() === tag.toLowerCase());
-    if (existing) {
-      existing.category = category;
-      existing.aliases = aliases;
-    } else {
-      breachTags.push({ category, tag, aliases });
-    }
-
-    saveBreaches();
-    form.reset();
-  });
-
-  loadBreaches();
+  updateList(breaches);
+  form.reset();
 });
+
+function updateList(breaches) {
+  breachList.innerHTML = "";
+  breaches.forEach(addToList);
+}
+
+function addToList(breach) {
+  const li = document.createElement("li");
+  li.innerHTML = `
+    <strong>${breach.category}</strong> - ${breach.canonical}
+    <br><em>Aliases:</em> ${breach.aliases.join(", ")}
+    <button onclick="deleteTag('${breach.canonical}')">Delete</button>
+  `;
+  breachList.appendChild(li);
+}
+
+function deleteTag(canonical) {
+  let breaches = JSON.parse(localStorage.getItem("breachTags") || "[]");
+  breaches = breaches.filter(b => b.canonical !== canonical);
+  localStorage.setItem("breachTags", JSON.stringify(breaches));
+  updateList(breaches);
+}
