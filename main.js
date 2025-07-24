@@ -1,54 +1,56 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const categoryInput = document.getElementById('category');
-  const canonicalInput = document.getElementById('canonicalTag');
-  const aliasesInput = document.getElementById('aliases');
-  const tagList = document.getElementById('tagList');
-  const addBtn = document.getElementById('addBtn');
+let breachData = [];
 
-  let breachTags = [];
-
-  // Load from breaches.json
-  fetch('breaches.json')
-    .then(response => response.json())
-    .then(data => {
-      breachTags = data;
-      renderTags();
-    });
-
-  addBtn.addEventListener('click', () => {
-    const category = categoryInput.value.trim();
-    const canonical = canonicalInput.value.trim();
-    const aliases = aliasesInput.value.split(',').map(a => a.trim()).filter(Boolean);
-
-    if (!category || !canonical) {
-      alert('Category and Canonical Tag are required.');
-      return;
-    }
-
-    const index = breachTags.findIndex(tag => tag.canonical.toLowerCase() === canonical.toLowerCase());
-    if (index > -1) {
-      breachTags[index] = { category, canonical, aliases };
-    } else {
-      breachTags.push({ category, canonical, aliases });
-    }
-
-    renderTags();
-    categoryInput.value = '';
-    canonicalInput.value = '';
-    aliasesInput.value = '';
-  });
-
-  function renderTags() {
-    tagList.innerHTML = '';
-    breachTags.forEach(tag => {
-      const div = document.createElement('div');
-      div.className = 'breach-entry';
-      div.innerHTML = `
-        <strong>Category:</strong> ${tag.category}<br>
-        <strong>Canonical:</strong> ${tag.canonical}<br>
-        <strong>Aliases:</strong> ${tag.aliases.join(', ')}
-      `;
-      tagList.appendChild(div);
-    });
+async function fetchBreaches() {
+  try {
+    const response = await fetch("breaches.json");
+    if (!response.ok) throw new Error("Failed to load breaches");
+    breachData = await response.json();
+    renderBreaches();
+  } catch (err) {
+    console.error("Error loading breaches:", err);
   }
-});
+}
+
+function renderBreaches() {
+  const list = document.getElementById("breachList");
+  list.innerHTML = "";
+  breachData.forEach((item, index) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>Category:</strong> ${item.category} |
+                    <strong>Tag:</strong> ${item.tag} |
+                    <strong>Aliases:</strong> ${item.aliases.join(", ")}`;
+    list.appendChild(li);
+  });
+}
+
+function addBreach() {
+  const category = document.getElementById("category").value.trim();
+  const tag = document.getElementById("tag").value.trim();
+  const aliases = document
+    .getElementById("aliases")
+    .value.split(",")
+    .map((a) => a.trim())
+    .filter(Boolean);
+
+  if (!category || !tag) {
+    alert("Category and Tag are required.");
+    return;
+  }
+
+  const index = breachData.findIndex(
+    (b) => b.tag.toLowerCase() === tag.toLowerCase()
+  );
+
+  if (index >= 0) {
+    breachData[index] = { category, tag, aliases };
+  } else {
+    breachData.push({ category, tag, aliases });
+  }
+
+  renderBreaches();
+  document.getElementById("category").value = "";
+  document.getElementById("tag").value = "";
+  document.getElementById("aliases").value = "";
+}
+
+window.onload = fetchBreaches;
