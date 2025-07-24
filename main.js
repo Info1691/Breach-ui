@@ -1,54 +1,52 @@
-// Load breaches on page load
-document.addEventListener("DOMContentLoaded", () => {
-  fetch('breaches.json')
-    .then(response => response.json())
-    .then(data => renderBreaches(data))
-    .catch(error => {
-      console.error("Error loading breaches:", error);
-      document.getElementById("breachList").innerHTML = "<p>Could not load breaches.</p>";
-    });
-});
+// Load breach data from JSON and display
+window.onload = async () => {
+  try {
+    const response = await fetch('breaches.json');
+    const breaches = await response.json();
+    breaches.forEach(addBreachCard);
+  } catch (error) {
+    console.error("Failed to load breaches:", error);
+  }
+};
 
-// Render breach entries as styled cards
-function renderBreaches(breaches) {
-  const breachList = document.getElementById("breachList");
-  breachList.innerHTML = ''; // Clear existing
+function addBreachCard(breach) {
+  const list = document.getElementById("tag-list");
 
-  breaches.forEach((entry, index) => {
-    const card = document.createElement("li");
-    card.className = "breach-card";
-    card.innerHTML = `
-      <h3>${entry.tag}</h3>
-      <p><strong>Category:</strong> ${entry.category}</p>
-      <p><strong>Aliases:</strong> ${entry.aliases.join(', ')}</p>
-    `;
-    breachList.appendChild(card);
-  });
+  const card = document.createElement("div");
+  card.className = "tag-card";
+
+  const title = document.createElement("strong");
+  title.innerText = `Breach of ${breach.tag.toLowerCase()}`;
+
+  const category = document.createElement("p");
+  category.innerHTML = `<strong>Category:</strong> ${breach.category}`;
+
+  const aliases = document.createElement("p");
+  aliases.innerHTML = `<strong>Aliases:</strong> ${breach.aliases.join(", ")}`;
+
+  card.appendChild(title);
+  card.appendChild(category);
+  card.appendChild(aliases);
+
+  list.appendChild(card);
 }
 
-// Add or update a breach (UI only)
+// Add new breach entry
 function addBreach() {
   const category = document.getElementById("category").value.trim();
   const tag = document.getElementById("tag").value.trim();
-  const aliases = document.getElementById("aliases").value.split(',').map(a => a.trim()).filter(a => a);
+  const aliases = document.getElementById("aliases").value.trim().split(',').map(s => s.trim());
 
-  if (!category || !tag || aliases.length === 0) {
-    alert("Please fill all fields including aliases.");
+  if (!category || !tag) {
+    alert("Category and Canonical Tag are required.");
     return;
   }
 
-  const newCard = document.createElement("li");
-  newCard.className = "breach-card";
-  newCard.innerHTML = `
-    <h3>${tag}</h3>
-    <p><strong>Category:</strong> ${category}</p>
-    <p><strong>Aliases:</strong> ${aliases.join(', ')}</p>
-  `;
+  const breach = { category, tag, aliases };
+  addBreachCard(breach);
 
-  document.getElementById("breachList").appendChild(newCard);
-
-  // Reset form
-  document.getElementById("category").value = '';
-  document.getElementById("tag").value = '';
-  document.getElementById("aliases").value = '';
+  // Clear fields
+  document.getElementById("category").value = "";
+  document.getElementById("tag").value = "";
+  document.getElementById("aliases").value = "";
 }
