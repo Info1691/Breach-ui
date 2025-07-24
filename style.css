@@ -1,106 +1,92 @@
-html, body {
+/* General Reset */
+body, html {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
   background-color: #f5f8fc;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/* Container */
 .container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 800px;
   padding: 20px;
   box-sizing: border-box;
 }
 
-/* HEADER */
+/* Header */
 .header {
+  background-color: #002e5f;
+  color: white;
   display: flex;
   align-items: center;
-  background-color: #003366;
-  color: white;
-  width: 100%;
-  padding: 15px 25px;
+  padding: 16px;
   border-radius: 10px 10px 0 0;
 }
 
 .logo {
-  height: 50px;
-  margin-right: 20px;
-  background: white;
-  border-radius: 4px;
-  padding: 2px;
-}
-
-/* FORM */
-.form-section {
-  width: 100%;
-  margin-top: 30px;
-  padding: 20px;
+  width: 60px;
+  height: auto;
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+  padding: 4px;
+  margin-right: 16px;
+  border-radius: 5px;
 }
 
-input {
-  padding: 10px;
-  margin-right: 10px;
+/* Form */
+.form-section {
+  background: white;
+  padding: 20px;
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-section input {
+  display: block;
+  width: 100%;
   margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  width: calc(100% - 22px);
-  max-width: 250px;
-  box-sizing: border-box;
 }
 
-button {
-  background-color: #003366;
+.form-section button {
+  background-color: #003e80;
   color: white;
-  border: none;
   padding: 10px 16px;
-  border-radius: 5px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
 }
-button:hover {
-  background-color: #00509e;
-}
 
-/* BREACH LIST */
+/* Breach List */
 .breach-list {
-  width: 100%;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
-#tag-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.breach-list h2 {
+  color: #002e5f;
 }
 
 .tag-card {
-  background-color: #ffffff;
-  border-left: 5px solid #003366;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  background: white;
+  border-left: 5px solid #004b93;
+  margin-bottom: 12px;
+  padding: 14px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.tag-card strong {
-  display: block;
-  font-size: 16px;
-  margin-bottom: 8px;
-  color: #222;
+.tag-card h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
 }
 
 .tag-card p {
-  margin: 3px 0;
+  margin: 4px 0;
   font-size: 14px;
-  color: #333;
 }
