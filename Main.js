@@ -1,63 +1,47 @@
-let breaches = [];
+const breachForm = document.getElementById("breach-form");
+const breachInput = document.getElementById("new-breach");
+const breachList = document.getElementById("breach-list");
 
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("breaches.json")
-    .then(res => res.json())
-    .then(data => {
-      breaches = data;
-      renderList();
-    })
-    .catch(() => {
-      breaches = [];
-      renderList();
-    });
+// Load existing breaches from localStorage
+window.onload = () => {
+  const stored = JSON.parse(localStorage.getItem("breachTags") || "[]");
+  stored.forEach(addBreachToDOM);
+};
 
-  document.getElementById("addButton").addEventListener("click", () => {
-    const input = document.getElementById("newBreachInput");
-    const value = input.value.trim();
-    if (value) {
-      breaches.push(value);
-      input.value = "";
-      renderList();
-    }
-  });
-
-  document.getElementById("exportButton").addEventListener("click", saveBreaches);
+breachForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  const value = breachInput.value.trim();
+  if (!value) return;
+  addBreachToDOM(value);
+  storeBreach(value);
+  breachInput.value = "";
 });
 
-function renderList() {
-  const list = document.getElementById("breachList");
-  list.innerHTML = "";
+function addBreachToDOM(breach) {
+  const li = document.createElement("li");
+  li.textContent = breach;
 
-  breaches.forEach((tag, index) => {
-    const li = document.createElement("li");
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Delete";
+  deleteBtn.onclick = () => {
+    breachList.removeChild(li);
+    deleteBreach(breach);
+  };
 
-    const input = document.createElement("input");
-    input.type = "text";
-    input.value = tag;
-    input.addEventListener("change", () => {
-      breaches[index] = input.value.trim();
-    });
-
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.addEventListener("click", () => {
-      breaches.splice(index, 1);
-      renderList();
-    });
-
-    li.appendChild(input);
-    li.appendChild(deleteBtn);
-    list.appendChild(li);
-  });
+  li.appendChild(deleteBtn);
+  breachList.appendChild(li);
 }
 
-function saveBreaches() {
-  const blob = new Blob([JSON.stringify(breaches, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "breaches.json";
-  a.click();
-  URL.revokeObjectURL(url);
+function storeBreach(breach) {
+  const tags = JSON.parse(localStorage.getItem("breachTags") || "[]");
+  if (!tags.includes(breach)) {
+    tags.push(breach);
+    localStorage.setItem("breachTags", JSON.stringify(tags));
+  }
+}
+
+function deleteBreach(breach) {
+  const tags = JSON.parse(localStorage.getItem("breachTags") || "[]");
+  const updated = tags.filter(tag => tag !== breach);
+  localStorage.setItem("breachTags", JSON.stringify(updated));
 }
