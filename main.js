@@ -1,49 +1,54 @@
-const form = document.getElementById("breach-form");
-const breachList = document.getElementById("breach-list");
+document.addEventListener('DOMContentLoaded', () => {
+  const categoryInput = document.getElementById('category');
+  const canonicalInput = document.getElementById('canonicalTag');
+  const aliasesInput = document.getElementById('aliases');
+  const tagList = document.getElementById('tagList');
+  const addBtn = document.getElementById('addBtn');
 
-window.onload = () => {
-  const stored = JSON.parse(localStorage.getItem("breachTags") || "[]");
-  stored.forEach(addToList);
-};
+  let breachTags = [];
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-  const category = document.getElementById("category").value.trim();
-  const canonical = document.getElementById("canonical").value.trim();
-  const aliases = document.getElementById("aliases").value.trim().split(",").map(a => a.trim());
+  // Load from breaches.json
+  fetch('breaches.json')
+    .then(response => response.json())
+    .then(data => {
+      breachTags = data;
+      renderTags();
+    });
 
-  if (!category || !canonical) return;
+  addBtn.addEventListener('click', () => {
+    const category = categoryInput.value.trim();
+    const canonical = canonicalInput.value.trim();
+    const aliases = aliasesInput.value.split(',').map(a => a.trim()).filter(Boolean);
 
-  const breach = { category, canonical, aliases };
-  let breaches = JSON.parse(localStorage.getItem("breachTags") || "[]");
+    if (!category || !canonical) {
+      alert('Category and Canonical Tag are required.');
+      return;
+    }
 
-  // Remove if already exists
-  breaches = breaches.filter(b => b.canonical !== canonical);
-  breaches.push(breach);
-  localStorage.setItem("breachTags", JSON.stringify(breaches));
+    const index = breachTags.findIndex(tag => tag.canonical.toLowerCase() === canonical.toLowerCase());
+    if (index > -1) {
+      breachTags[index] = { category, canonical, aliases };
+    } else {
+      breachTags.push({ category, canonical, aliases });
+    }
 
-  updateList(breaches);
-  form.reset();
+    renderTags();
+    categoryInput.value = '';
+    canonicalInput.value = '';
+    aliasesInput.value = '';
+  });
+
+  function renderTags() {
+    tagList.innerHTML = '';
+    breachTags.forEach(tag => {
+      const div = document.createElement('div');
+      div.className = 'breach-entry';
+      div.innerHTML = `
+        <strong>Category:</strong> ${tag.category}<br>
+        <strong>Canonical:</strong> ${tag.canonical}<br>
+        <strong>Aliases:</strong> ${tag.aliases.join(', ')}
+      `;
+      tagList.appendChild(div);
+    });
+  }
 });
-
-function updateList(breaches) {
-  breachList.innerHTML = "";
-  breaches.forEach(addToList);
-}
-
-function addToList(breach) {
-  const li = document.createElement("li");
-  li.innerHTML = `
-    <strong>${breach.category}</strong> - ${breach.canonical}
-    <br><em>Aliases:</em> ${breach.aliases.join(", ")}
-    <button onclick="deleteTag('${breach.canonical}')">Delete</button>
-  `;
-  breachList.appendChild(li);
-}
-
-function deleteTag(canonical) {
-  let breaches = JSON.parse(localStorage.getItem("breachTags") || "[]");
-  breaches = breaches.filter(b => b.canonical !== canonical);
-  localStorage.setItem("breachTags", JSON.stringify(breaches));
-  updateList(breaches);
-}
