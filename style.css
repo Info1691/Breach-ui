@@ -1,28 +1,26 @@
-/* Reset and base styles */
-body {
+html, body {
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
   background-color: #f5f8fc;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-/* Anchor container to top */
 .container {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   width: 100%;
   max-width: 900px;
   margin: 0 auto;
+  padding: 20px;
   box-sizing: border-box;
 }
 
-/* Header styling */
+/* HEADER */
 .header {
   display: flex;
   align-items: center;
@@ -36,26 +34,19 @@ body {
 .logo {
   height: 50px;
   margin-right: 20px;
+  background: white;
+  border-radius: 4px;
+  padding: 2px;
 }
 
-.header h1 {
-  font-size: 24px;
-  margin: 0;
-}
-
-/* Form section styling */
+/* FORM */
 .form-section {
   width: 100%;
   margin-top: 30px;
   padding: 20px;
-  background-color: #ffffff;
+  background-color: white;
   border-radius: 10px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-}
-
-.form-section h2 {
-  margin-bottom: 15px;
-  color: #003366;
 }
 
 input {
@@ -69,7 +60,6 @@ input {
   box-sizing: border-box;
 }
 
-/* Button style */
 button {
   background-color: #003366;
   color: white;
@@ -78,20 +68,14 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
-
 button:hover {
   background-color: #00509e;
 }
 
-/* Breach list styling */
+/* BREACH LIST */
 .breach-list {
   width: 100%;
   margin-top: 40px;
-}
-
-.breach-list h2 {
-  margin-bottom: 20px;
-  color: #003366;
 }
 
 #tag-list {
@@ -100,7 +84,6 @@ button:hover {
   gap: 20px;
 }
 
-/* Tag card styling */
 .tag-card {
   background-color: #ffffff;
   border-left: 5px solid #003366;
