@@ -1,20 +1,186 @@
 [
   {
-    "category": "Fiduciary Duties",
-    "tag": "Breach of fiduciary duty",
+    "category": "Fiduciary Duty",
+    "tag": "conflicted trustee",
     "aliases": [
-      "conflicted trustee",
-      "conflict of duties",
-      "failure to act in interest of beneficiaries"
+      "conflict of interest",
+      "dual loyalty",
+      "conflicted",
+      "non-independent trustee"
     ]
   },
   {
-    "category": "Statutory Duties",
-    "tag": "Breach of mandatory duty",
+    "category": "Fiduciary Duty",
+    "tag": "self-dealing",
     "aliases": [
-      "failure to comply with trust law",
-      "unlawful delegation",
-      "failure to follow settlor clause"
+      "unauthorised benefit",
+      "personal gain",
+      "undisclosed interest",
+      "abuse of position"
+    ]
+  },
+  {
+    "category": "Fiduciary Duty",
+    "tag": "breach of loyalty",
+    "aliases": [
+      "divided loyalty",
+      "duty of fidelity",
+      "partiality"
+    ]
+  },
+  {
+    "category": "Fiduciary Duty",
+    "tag": "breach of care",
+    "aliases": [
+      "negligence",
+      "recklessness",
+      "lack of diligence",
+      "failure to act prudently"
+    ]
+  },
+  {
+    "category": "Statutory Duty",
+    "tag": "failure to report",
+    "aliases": [
+      "non-disclosure to regulator",
+      "JFSC breach",
+      "failure to notify",
+      "regulatory omission"
+    ]
+  },
+  {
+    "category": "Statutory Duty",
+    "tag": "unauthorised delegation",
+    "aliases": [
+      "improper delegation",
+      "non-compliant delegation",
+      "breach of trust powers"
+    ]
+  },
+  {
+    "category": "Disclosure & Consent",
+    "tag": "no beneficiary consent",
+    "aliases": [
+      "lack of informed consent",
+      "beneficiaries not consulted",
+      "failure to disclose"
+    ]
+  },
+  {
+    "category": "Disclosure & Consent",
+    "tag": "concealment of information",
+    "aliases": [
+      "non-disclosure",
+      "hidden transaction",
+      "undisclosed losses",
+      "suppressed data"
+    ]
+  },
+  {
+    "category": "Professional Conduct",
+    "tag": "unauthorised representation",
+    "aliases": [
+      "acted without instructions",
+      "no authority to represent",
+      "conflict in representation"
+    ]
+  },
+  {
+    "category": "Professional Conduct",
+    "tag": "dual representation",
+    "aliases": [
+      "conflicted legal role",
+      "acted for trustee and beneficiary",
+      "representation breach"
+    ]
+  },
+  {
+    "category": "Financial Mismanagement",
+    "tag": "unauthorised investment",
+    "aliases": [
+      "speculative investment",
+      "non-trust purpose investment",
+      "no risk assessment"
+    ]
+  },
+  {
+    "category": "Financial Mismanagement",
+    "tag": "misappropriation of funds",
+    "aliases": [
+      "diversion of funds",
+      "trust asset misuse",
+      "improper withdrawal"
+    ]
+  },
+  {
+    "category": "Procedural Breach",
+    "tag": "lack of Beddoe order",
+    "aliases": [
+      "litigation without court approval",
+      "unapproved proceedings",
+      "unauthorised litigation"
+    ]
+  },
+  {
+    "category": "Procedural Breach",
+    "tag": "failure to keep records",
+    "aliases": [
+      "no accounting",
+      "loss of audit trail",
+      "missing trustee documents"
+    ]
+  },
+  {
+    "category": "Litigation Misconduct",
+    "tag": "abuse of process",
+    "aliases": [
+      "vexatious litigation",
+      "collateral attack",
+      "prolonged proceedings"
+    ]
+  },
+  {
+    "category": "Litigation Misconduct",
+    "tag": "waiver without authority",
+    "aliases": [
+      "settled without instruction",
+      "damages waived improperly",
+      "PII rights not enforced"
+    ]
+  },
+  {
+    "category": "Financial Mismanagement",
+    "tag": "fee abuse",
+    "aliases": [
+      "excessive billing",
+      "unjustified fees",
+      "non-proportional charging"
+    ]
+  },
+  {
+    "category": "Disclosure & Consent",
+    "tag": "failure to inform protector",
+    "aliases": [
+      "protector bypassed",
+      "non-disclosure to protector"
+    ]
+  },
+  {
+    "category": "Statutory Duty",
+    "tag": "breach of investment duties",
+    "aliases": [
+      "failure to diversify",
+      "non-prudent investment",
+      "no due diligence"
+    ]
+  },
+  {
+    "category": "Professional Conduct",
+    "tag": "ignored professional advice",
+    "aliases": [
+      "went against counsel",
+      "disregarded legal advice",
+      "advice override"
     ]
   }
 ]
