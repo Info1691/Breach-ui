@@ -1,186 +1,183 @@
 [
   {
     "category": "Fiduciary Duty",
-    "tag": "conflicted trustee",
+    "tag": "Breach of fiduciary duty",
     "aliases": [
-      "conflict of interest",
-      "dual loyalty",
-      "conflicted",
-      "non-independent trustee"
+      "fiduciary conflict",
+      "breach of trust",
+      "conflicted trustee",
+      "acting in self-interest"
     ]
   },
   {
-    "category": "Fiduciary Duty",
-    "tag": "self-dealing",
+    "category": "Legal Duty",
+    "tag": "Breach of mandatory duty",
     "aliases": [
-      "unauthorised benefit",
-      "personal gain",
-      "undisclosed interest",
-      "abuse of position"
+      "failure to act",
+      "ignored obligation",
+      "non-compliance with law"
     ]
   },
   {
-    "category": "Fiduciary Duty",
-    "tag": "breach of loyalty",
-    "aliases": [
-      "divided loyalty",
-      "duty of fidelity",
-      "partiality"
-    ]
-  },
-  {
-    "category": "Fiduciary Duty",
-    "tag": "breach of care",
-    "aliases": [
-      "negligence",
-      "recklessness",
-      "lack of diligence",
-      "failure to act prudently"
-    ]
-  },
-  {
-    "category": "Statutory Duty",
-    "tag": "failure to report",
-    "aliases": [
-      "non-disclosure to regulator",
-      "JFSC breach",
-      "failure to notify",
-      "regulatory omission"
-    ]
-  },
-  {
-    "category": "Statutory Duty",
-    "tag": "unauthorised delegation",
-    "aliases": [
-      "improper delegation",
-      "non-compliant delegation",
-      "breach of trust powers"
-    ]
-  },
-  {
-    "category": "Disclosure & Consent",
-    "tag": "no beneficiary consent",
-    "aliases": [
-      "lack of informed consent",
-      "beneficiaries not consulted",
-      "failure to disclose"
-    ]
-  },
-  {
-    "category": "Disclosure & Consent",
-    "tag": "concealment of information",
+    "category": "Disclosure",
+    "tag": "Failure to disclose",
     "aliases": [
       "non-disclosure",
-      "hidden transaction",
-      "undisclosed losses",
-      "suppressed data"
+      "concealment",
+      "withholding information"
+    ]
+  },
+  {
+    "category": "Investment Mismanagement",
+    "tag": "Improper investment",
+    "aliases": [
+      "unauthorised investment",
+      "reckless investment",
+      "speculative use of funds"
+    ]
+  },
+  {
+    "category": "Conflict of Interest",
+    "tag": "Conflict of interest",
+    "aliases": [
+      "conflicted",
+      "dual role",
+      "self-dealing"
     ]
   },
   {
     "category": "Professional Conduct",
-    "tag": "unauthorised representation",
+    "tag": "Solicitor misconduct",
     "aliases": [
-      "acted without instructions",
-      "no authority to represent",
-      "conflict in representation"
+      "legal misconduct",
+      "breach of professional standards",
+      "SRA breach"
     ]
   },
   {
-    "category": "Professional Conduct",
-    "tag": "dual representation",
+    "category": "Duty of Care",
+    "tag": "Negligence",
     "aliases": [
-      "conflicted legal role",
-      "acted for trustee and beneficiary",
-      "representation breach"
+      "lack of due diligence",
+      "failure to act prudently",
+      "duty of care breach"
     ]
   },
   {
-    "category": "Financial Mismanagement",
-    "tag": "unauthorised investment",
+    "category": "Regulatory",
+    "tag": "Breach of JFSC rules",
     "aliases": [
-      "speculative investment",
-      "non-trust purpose investment",
-      "no risk assessment"
+      "JFSC non-compliance",
+      "failure to notify regulator",
+      "regulatory breach"
     ]
   },
   {
-    "category": "Financial Mismanagement",
-    "tag": "misappropriation of funds",
+    "category": "Litigation Misconduct",
+    "tag": "Improper litigation funding",
     "aliases": [
-      "diversion of funds",
-      "trust asset misuse",
-      "improper withdrawal"
-    ]
-  },
-  {
-    "category": "Procedural Breach",
-    "tag": "lack of Beddoe order",
-    "aliases": [
-      "litigation without court approval",
-      "unapproved proceedings",
+      "using trust funds for personal defence",
+      "litigation abuse",
       "unauthorised litigation"
     ]
   },
   {
-    "category": "Procedural Breach",
-    "tag": "failure to keep records",
+    "category": "Misappropriation",
+    "tag": "Misappropriation of trust assets",
     "aliases": [
-      "no accounting",
-      "loss of audit trail",
-      "missing trustee documents"
+      "embezzlement",
+      "unexplained withdrawal",
+      "unauthorised use of funds"
     ]
   },
   {
-    "category": "Litigation Misconduct",
-    "tag": "abuse of process",
+    "category": "Trust Instrument Breach",
+    "tag": "Breach of trust deed",
     "aliases": [
-      "vexatious litigation",
-      "collateral attack",
-      "prolonged proceedings"
+      "unauthorised amendment",
+      "deed breach",
+      "trust terms violation"
     ]
   },
   {
-    "category": "Litigation Misconduct",
-    "tag": "waiver without authority",
+    "category": "Beneficiary Rights",
+    "tag": "Failure to consult beneficiaries",
     "aliases": [
-      "settled without instruction",
-      "damages waived improperly",
-      "PII rights not enforced"
+      "uninformed beneficiaries",
+      "lack of notice",
+      "no beneficiary consent"
     ]
   },
   {
-    "category": "Financial Mismanagement",
-    "tag": "fee abuse",
+    "category": "Valuation Failure",
+    "tag": "Improper valuation",
     "aliases": [
-      "excessive billing",
-      "unjustified fees",
-      "non-proportional charging"
+      "valuation error",
+      "overvaluation",
+      "undervaluation"
     ]
   },
   {
-    "category": "Disclosure & Consent",
-    "tag": "failure to inform protector",
+    "category": "Tax Exposure",
+    "tag": "Tax structuring failure",
     "aliases": [
-      "protector bypassed",
-      "non-disclosure to protector"
+      "poor tax planning",
+      "avoidance scheme risk",
+      "loss of reliefs"
     ]
   },
   {
-    "category": "Statutory Duty",
-    "tag": "breach of investment duties",
+    "category": "Indemnity Risk",
+    "tag": "Failure to obtain indemnity",
     "aliases": [
-      "failure to diversify",
-      "non-prudent investment",
-      "no due diligence"
+      "lack of indemnity",
+      "unsupported distribution",
+      "risky transaction"
     ]
   },
   {
-    "category": "Professional Conduct",
-    "tag": "ignored professional advice",
+    "category": "SAR Obligation",
+    "tag": "Failure to file SAR",
     "aliases": [
-      "went against counsel",
-      "disregarded legal advice",
-      "advice override"
+      "unreported suspicious activity",
+      "AML breach",
+      "non-reporting of crime"
+    ]
+  },
+  {
+    "category": "Accounting Failure",
+    "tag": "Inadequate trust accounts",
+    "aliases": [
+      "missing records",
+      "unaudited accounts",
+      "accounting failure"
+    ]
+  },
+  {
+    "category": "Jurisdictional Conflict",
+    "tag": "Improper change of proper law",
+    "aliases": [
+      "jurisdiction manipulation",
+      "forum shopping",
+      "governing law abuse"
+    ]
+  },
+  {
+    "category": "Dual Representation",
+    "tag": "Solicitor acting for both trustee and beneficiary",
+    "aliases": [
+      "dual representation",
+      "conflicted solicitor",
+      "improper client alignment"
+    ]
+  },
+  {
+    "category": "Beddoe Breach",
+    "tag": "Litigation without Beddoe order",
+    "aliases": [
+      "no Beddoe protection",
+      "unauthorised legal action",
+      "litigation exposure"
     ]
   }
 ]
