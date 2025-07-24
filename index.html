@@ -7,20 +7,20 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="header">
-    <img src="logo.png" alt="Logo" class="logo" />
-    <h1>Breach Tag Manager</h1>
-  </div>
+  <div id="app">
+    <header>
+      <img src="logo.png" alt="Logo" id="logo" />
+      <h1>Breach Tag Manager</h1>
+    </header>
 
-  <main>
-    <section id="breachContainer"></section>
-
-    <div class="controls">
-      <button id="addBreach">➕ Add Breach</button>
-      <button id="saveBreaches">💾 Save All</button>
-      <button id="exportBreaches">📤 Export</button>
+    <div id="controls">
+      <input type="text" id="newBreachInput" placeholder="Enter new breach tag" />
+      <button id="addButton">Add Tag</button>
+      <button id="exportButton">Export All Tags</button>
     </div>
-  </main>
+
+    <ul id="breachList"></ul>
+  </div>
 
   <script src="main.js"></script>
 </body>
