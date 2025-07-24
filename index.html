@@ -2,34 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Breach Manager</title>
+  <title>Breach Tag Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="header">
-    <img src="logo.png" alt="Logo" id="logo">
-    <h1>Breach Manager</h1>
-  </div>
+  <div class="container">
+    <header>
+      <img src="logo.png" alt="Logo" class="logo">
+      <h1>Breach Tag Manager</h1>
+    </header>
 
-  <main>
-    <div id="breachForm">
+    <section class="form-section">
       <h2>Add / Edit Breach</h2>
-      <form id="addBreachForm">
-        <label>Category: <input type="text" id="category" required></label><br>
-        <label>Canonical Tag: <input type="text" id="tag" required></label><br>
-        <label>Aliases (comma-separated): <input type="text" id="aliases"></label><br>
+      <form id="breach-form">
+        <input type="text" id="category" placeholder="Category">
+        <input type="text" id="canonical" placeholder="Canonical Tag">
+        <input type="text" id="aliases" placeholder="Aliases (comma-separated)">
         <button type="submit">Add / Update</button>
       </form>
-    </div>
+    </section>
 
-    <hr>
-
-    <div id="breachList">
+    <section class="list-section">
       <h2>Current Breach Tags</h2>
-      <ul id="breachContainer"></ul>
-    </div>
-  </main>
-
+      <ul id="breach-list"></ul>
+    </section>
+  </div>
   <script src="main.js"></script>
 </body>
 </html>
