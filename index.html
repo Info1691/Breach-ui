@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Breach Tag Manager</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <div class="header">
+    <header class="header">
       <img src="logo.png" alt="Logo" class="logo" />
       <h1>Breach Tag Manager</h1>
-    </div>
+    </header>
 
     <section class="form-section">
       <h2>Add / Edit Breach</h2>
-      <input type="text" id="category" placeholder="Category">
-      <input type="text" id="canonicalTag" placeholder="Canonical Tag">
-      <input type="text" id="aliases" placeholder="Aliases (comma-separated)">
-      <button id="addBtn">Add / Update</button>
+      <input id="category" placeholder="Category" />
+      <input id="tag" placeholder="Canonical Tag" />
+      <input id="aliases" placeholder="Aliases (comma-separated)" />
+      <button onclick="addBreach()">Add / Update</button>
     </section>
 
-    <section class="list-section">
+    <section class="breach-list">
       <h2>Current Breach Tags</h2>
-      <div id="tagList"></div>
+      <ul id="breachList"></ul>
     </section>
   </div>
 
