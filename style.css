@@ -1,102 +1,41 @@
-/* Reset & Base */
-body {
+body, html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  background-color: #f9fbfd;
-  color: #1a1a1a;
+  padding: 0;
+  height: 100%;
+  background-color: #f6f8fa;
 }
 
 .container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* Header */
-.header {
-  background-color: #003366;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  border-radius: 8px 8px 0 0;
-}
-
-.logo {
-  height: 40px;
-  margin-right: 15px;
-  background-color: white;
-  padding: 4px;
-  border-radius: 4px;
-}
-
-.header h1 {
-  font-size: 1.5em;
-  margin: 0;
-}
-
-/* Form Section */
-.form-section {
-  background: white;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-top: none;
-}
-
-.form-section h2 {
-  margin-top: 0;
-}
-
-input {
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  font-size: 1em;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 1em;
-  background-color: #0057b8;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #004a9c;
-}
-
-/* Breach List */
-.breach-list {
-  margin-top: 30px;
-}
-
-.tag-list {
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 30px;
+  padding-bottom: 50px;
 }
 
-.breach-card {
+.breach-list {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+}
+
+.breach-list li {
+  list-style: none;
   background: white;
-  border: 1px solid #ddd;
-  border-left: 5px solid #0057b8;
-  padding: 15px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  border-left: 4px solid #004080;
 }
 
-.breach-card h3 {
-  margin: 0 0 8px 0;
-  font-size: 1.1em;
+.breach-list li strong {
+  display: block;
+  margin-bottom: 6px;
 }
 
-.breach-card p {
-  margin: 5px 0;
-  font-size: 0.95em;
+form input, form button {
+  margin-right: 10px;
 }
