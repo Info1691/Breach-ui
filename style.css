@@ -1,48 +1,47 @@
-/* General Reset */
-body, html {
+body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen;
-  background-color: #f5f8fc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f6f8fc;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
 }
 
-/* Container */
 .container {
   width: 100%;
   max-width: 800px;
+  background-color: white;
+  margin-top: 20px;
   padding: 20px;
-  box-sizing: border-box;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 10px;
 }
 
-/* Header */
 .header {
-  background-color: #002e5f;
-  color: white;
   display: flex;
   align-items: center;
-  padding: 16px;
+  background-color: #003366;
+  padding: 15px 20px;
   border-radius: 10px 10px 0 0;
 }
 
 .logo {
-  width: 60px;
-  height: auto;
+  height: 60px;
+  margin-right: 20px;
   background-color: white;
-  padding: 4px;
-  margin-right: 16px;
   border-radius: 5px;
 }
 
-/* Form */
-.form-section {
-  background: white;
+.header h1 {
+  color: white;
+  font-size: 24px;
+  margin: 0;
+}
+
+.form-section, .breach-list {
   padding: 20px;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .form-section input {
@@ -50,43 +49,31 @@ body, html {
   width: 100%;
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid #ccc;
 }
 
-.form-section button {
-  background-color: #003e80;
-  color: white;
+button {
   padding: 10px 16px;
+  background-color: #003366;
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-/* Breach List */
-.breach-list {
-  margin-top: 30px;
+.breach-item {
+  background-color: #f9f9f9;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid #003366;
+  border-radius: 4px;
 }
 
-.breach-list h2 {
-  color: #002e5f;
+.breach-item h3 {
+  margin: 0 0 5px;
 }
 
-.tag-card {
-  background: white;
-  border-left: 5px solid #004b93;
-  margin-bottom: 12px;
-  padding: 14px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.tag-card h3 {
-  margin: 0 0 6px;
-  font-size: 18px;
-}
-
-.tag-card p {
-  margin: 4px 0;
-  font-size: 14px;
+.breach-item p {
+  margin: 2px 0;
 }
