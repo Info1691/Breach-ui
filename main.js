@@ -1,60 +1,43 @@
-let breachTags = [];
+async function loadBreaches() {
+  try {
+    const res = await fetch('breaches.json');
+    const breaches = await res.json();
 
-function loadTags() {
-  fetch('breaches.json')
-    .then(response => response.json())
-    .then(data => {
-      breachTags = data;
-      renderTags();
-    })
-    .catch(error => {
-      console.error('Failed to load breach tags:', error);
+    const tagList = document.getElementById('tag-list');
+    tagList.innerHTML = '';
+
+    breaches.forEach(entry => {
+      const div = document.createElement('div');
+      div.className = 'breach-item';
+
+      div.innerHTML = `
+        <h3>${entry.tag}</h3>
+        <p><strong>Category:</strong> ${entry.category}</p>
+        <p><strong>Aliases:</strong> ${entry.aliases.join(', ')}</p>
+      `;
+
+      tagList.appendChild(div);
     });
-}
-
-function renderTags() {
-  const list = document.getElementById('tag-list');
-  list.innerHTML = '';
-
-  breachTags.forEach(tag => {
-    const card = document.createElement('div');
-    card.className = 'tag-card';
-
-    const title = document.createElement('h3');
-    title.textContent = `Breach of ${tag.tag.toLowerCase()}`;
-
-    const category = document.createElement('p');
-    category.innerHTML = `<strong>Category:</strong> ${tag.category}`;
-
-    const aliases = document.createElement('p');
-    aliases.innerHTML = `<strong>Aliases:</strong> ${tag.aliases.join(', ')}`;
-
-    card.appendChild(title);
-    card.appendChild(category);
-    card.appendChild(aliases);
-    list.appendChild(card);
-  });
+  } catch (e) {
+    console.error("Failed to load breach tags:", e);
+  }
 }
 
 function addBreach() {
   const category = document.getElementById('category').value.trim();
   const tag = document.getElementById('tag').value.trim();
-  const aliases = document.getElementById('aliases').value.split(',').map(a => a.trim()).filter(Boolean);
+  const aliases = document.getElementById('aliases').value.split(',').map(s => s.trim()).filter(Boolean);
 
-  if (!category || !tag) {
-    alert('Both Category and Canonical Tag are required.');
-    return;
-  }
+  if (!category || !tag) return alert("Both Category and Canonical Tag are required.");
 
-  const existing = breachTags.find(t => t.tag.toLowerCase() === tag.toLowerCase());
-  if (existing) {
-    existing.category = category;
-    existing.aliases = aliases;
-  } else {
-    breachTags.push({ category, tag, aliases });
-  }
+  const newEntry = {
+    category,
+    tag,
+    aliases
+  };
 
-  renderTags();
+  console.log("New breach to be added (not persisted):", newEntry);
+  alert("This UI does not yet persist changes. Add functionality coming soon.");
 }
 
-window.onload = loadTags;
+window.onload = loadBreaches;
