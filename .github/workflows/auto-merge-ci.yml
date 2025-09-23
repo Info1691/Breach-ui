@@ -1,0 +1,21 @@
+name: Auto-merge CI sync PRs
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-merge if branch is ci/sync-breaches
+        uses: pascalgn/automerge-action@v0.16.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD: squash
+          MERGE_RETRIES: 12
+          MERGE_RETRY_SLEEP: 10
+        if: contains(github.head_ref, 'ci/sync-breaches')
