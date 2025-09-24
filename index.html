@@ -1,62 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
   <title>Breach Tag Manager</title>
-
-  <!-- Existing styles -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="logo.png" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Shared Repos Drawer styles -->
-  <link rel="stylesheet" href="drawer.css" />
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <!-- Single working trigger for the shared Repos drawer -->
-      <button id="repoBtn" class="btn btn-light" type="button" aria-controls="repo-drawer" aria-expanded="false">Repos</button>
-
-      <img src="logo.png" alt="Logo" class="logo" />
+  <header class="site-header">
+    <div class="brand">
+      <img src="logo.png" alt="BB" />
       <h1>Breach Tag Manager</h1>
-    </header>
+    </div>
+    <nav>
+      <a class="btn" href="https://github.com/Info1691/Breach-ui" target="_blank" rel="noopener">Repo</a>
+    </nav>
+  </header>
 
-    <section class="form-section">
+  <main class="container">
+    <section class="editor">
       <h2>Add / Edit Breach</h2>
-      <input id="category" placeholder="Category" />
-      <input id="tag" placeholder="Canonical Tag" />
-      <input id="aliases" placeholder="Aliases (comma-separated)" />
-      <button onclick="addBreach()">Add / Update</button>
+      <form id="edit-form" onsubmit="return false;">
+        <input id="in-category" type="text" placeholder="Category" />
+        <input id="in-tag" type="text" placeholder="Canonical Tag" />
+        <input id="in-aliases" type="text" placeholder="Aliases (comma-separated)" />
+        <button id="btn-add" class="btn">Add / Update</button>
+      </form>
+      <p class="note">This UI is read-only for now; use PRs to modify <code>breaches.json</code>.</p>
     </section>
 
-    <section class="breach-list">
-      <h2>Current Breach Tags</h2>
-      <div id="tag-list" class="tag-list"></div>
+    <section class="list">
+      <div class="list-header">
+        <h2>Current Breach Tags</h2>
+        <input id="filter" type="search" placeholder="Filter by tag, category, alias…" />
+      </div>
+      <div id="breach-list" class="cards"></div>
     </section>
-  </div>
+  </main>
 
-  <!-- Your existing app logic -->
-  <script src="main.js" defer></script>
+  <footer class="site-footer">
+    <span id="meta"></span>
+  </footer>
 
-  <!-- Optional: explicit Repos list (omit to use defaults in drawer.js) -->
-  <script>
-    window.REPO_LINKS = [
-      { href: 'https://info1691.github.io/rules-ui/',           label: 'Rules Repository' },
-      { href: 'https://info1691.github.io/laws-ui/',            label: 'Laws Repository' },
-      { href: 'https://info1691.github.io/commentary-ui/',      label: 'Commentary Viewer' },
-      { href: 'https://info1691.github.io/Law-Texts-ui/',       label: 'Trust Law Textbooks' },
-      { href: 'https://info1691.github.io/compliance-ui/',      label: 'Compliance – Citations' },
-      { href: 'https://info1691.github.io/compliance-ui/bulk/', label: 'Citations – Bulk Upload' },
-      { href: 'https://info1691.github.io/breaches-ui/',        label: 'Breaches Manager' }
-    ];
-  </script>
-
-  <!-- Shared Repos Drawer logic -->
-  <script src="drawer.js" defer></script>
-  <script defer>
-    window.addEventListener('DOMContentLoaded', () => {
-      RepoDrawer.init('#repoBtn');
-    });
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
