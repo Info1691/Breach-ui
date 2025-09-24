@@ -1,116 +1,250 @@
-/* Breach-ui viewer: renders breaches.json with provenance (no snippets). */
+/* Breach-ui full client script
+ * Loads breaches.json (canonical tags) and breaches_ui.json (provenance),
+ * renders cards with collapsible provenance tables, plus client-side filter.
+ */
 
-(function () {
-  const LIST_EL = document.getElementById('breach-list');
-  const FILTER_EL = document.getElementById('filter');
-  const META_EL = document.getElementById('meta');
+const FILE_CANON = "breaches.json";
+const FILE_PROV  = "breaches_ui.json"; // produced by LTJ workflow & synced here
 
-  let BREACHES = [];
+// -------- utilities
+const qs  = (s, el=document) => el.querySelector(s);
+const qsa = (s, el=document) => [...el.querySelectorAll(s)];
+const norm = s => (s || "").toString().trim();
+const lower = s => norm(s).toLowerCase();
+const uniq = arr => [...new Set(arr.filter(Boolean))];
+const byAlpha = (a, b) => a.localeCompare(b, undefined, {sensitivity: "base"});
 
-  async function loadBreaches() {
-    // Cache bust to avoid GH Pages CDN staleness after CI publishes
-    const url = `breaches.json?cb=${Date.now()}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
-    const data = await res.json();
-    if (!Array.isArray(data)) throw new Error('breaches.json must be an array');
-    return data;
+function asArray(v) {
+  if (v == null) return [];
+  return Array.isArray(v) ? v : [v];
+}
+
+function safeLink(href, text) {
+  if (!href) return text || "";
+  const a = document.createElement("a");
+  a.href = href;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.textContent = text || href;
+  return a.outerHTML;
+}
+
+// -------- data loading
+async function getJSON(path) {
+  const url = `${path}?v=${Date.now()}`; // cache-bust on hard refresh
+  const res = await fetch(url, {cache: "no-store"});
+  if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
+  return res.json();
+}
+
+async function loadData() {
+  // breaches.json is required; breaches_ui.json is optional
+  const [canon, provMaybe] = await Promise.allSettled([
+    getJSON(FILE_CANON),
+    getJSON(FILE_PROV)
+  ]);
+
+  if (canon.status !== "fulfilled") {
+    throw new Error(`Cannot load ${FILE_CANON}: ${canon.reason}`);
   }
 
-  function matchesFilter(item, q) {
-    if (!q) return true;
-    const hay = [
-      item.tag || '',
-      item.category || '',
-      ...(item.aliases || [])
-    ].join(' ').toLowerCase();
-    return hay.includes(q.toLowerCase());
-  }
+  const canonical = canon.value || [];
+  const provenance = (provMaybe.status === "fulfilled" ? provMaybe.value : []) || [];
 
-  function fmtScore(x) {
-    return typeof x === 'number' ? x.toFixed(3) : '';
-  }
+  // Normalize canonical list
+  const canonNorm = canonical.map(x => ({
+    category: norm(x.category),
+    tag: norm(x.tag),
+    tag_lc: lower(x.tag),
+    aliases: uniq(asArray(x.aliases).map(norm)).filter(Boolean)
+  }));
 
-  function renderCaseList(sources) {
-    if (!Array.isArray(sources) || sources.length === 0) {
-      return `<p class="muted">No supporting cases recorded.</p>`;
+  // Index provenance by canonical tag (case-insensitive)
+  // Accept either a flat list with .tag, or an object {tag, sources:[...]}, or {tag, provenance:[...]}
+  const provMap = new Map();
+  for (const item of provenance) {
+    const key = lower(item.tag || item.canonical || "");
+    if (!key) continue;
+    const entries = [];
+
+    if (Array.isArray(item.provenance)) entries.push(...item.provenance);
+    if (Array.isArray(item.sources)) entries.push(...item.sources);
+    // tolerate single "provenance" object too
+    if (!entries.length && item.provenance && typeof item.provenance === "object") {
+      entries.push(item.provenance);
     }
-    const rows = sources.map(s => {
-      const id = s.id || '';
-      const score = fmtScore(s.score);
-      return `
-        <li class="kv">
-          <code class="cid">${id}</code>
-          <span class="badge">score ${score}</span>
-        </li>`;
+
+    // Normalise each entry
+    const normEntries = entries.map(e => ({
+      source: norm(e.source || e.kind || e.type || ""),
+      citation: norm(e.citation || e.id || e.ref || ""),
+      title: norm(e.title || ""),
+      jurisdiction: norm(e.jurisdiction || ""),
+      page: norm(e.page || e.page_no || ""),
+      line: norm(e.line || e.line_no || ""),
+      score: typeof e.score === "number" ? e.score : (e.score ? Number(e.score) : ""),
+      snippet: norm(e.snippet || e.text || ""),
+      url: norm(e.url || e.href || "")
+    })).filter(x => Object.values(x).some(Boolean));
+
+    provMap.set(key, normEntries);
+  }
+
+  return { canonical: canonNorm, provMap };
+}
+
+// -------- rendering
+function renderCards(data) {
+  const root = qs("#cards");
+  root.innerHTML = "";
+
+  const sorted = [...data.canonical].sort((a,b) => byAlpha(a.tag, b.tag));
+
+  for (const item of sorted) {
+    root.appendChild(renderCard(item, data.provMap));
+  }
+}
+
+function renderCard(item, provMap) {
+  const card = document.createElement("article");
+  card.className = "card";
+  card.dataset.tag = item.tag_lc;
+  card.dataset.category = lower(item.category);
+  card.dataset.aliases = item.aliases.map(lower).join(" ");
+
+  const prov = provMap.get(item.tag_lc) || [];
+
+  // header
+  const head = document.createElement("div");
+  head.className = "card-head";
+  head.innerHTML = `
+    <h3 class="tag-title">${escapeHTML(item.tag)}</h3>
+    <div class="meta">
+      <span class="badge category">${escapeHTML(item.category || "Uncategorised")}</span>
+      <span class="badge count" title="Provenance entries">${prov.length} source${prov.length===1?"":"s"}</span>
+    </div>
+  `;
+
+  // aliases
+  const aliases = document.createElement("div");
+  aliases.className = "aliases";
+  aliases.innerHTML = `
+    <span class="dim">Aliases:</span>
+    ${item.aliases.length ? escapeHTML(item.aliases.join(", ")) : "<span class='muted'>—</span>"}
+  `;
+
+  // provenance section (collapsible)
+  const provWrap = document.createElement("div");
+  provWrap.className = "prov";
+  const provId = `prov-${hash(item.tag)}`;
+
+  const hasProv = prov.length > 0;
+  provWrap.innerHTML = `
+    <details ${hasProv ? "" : ""} id="${provId}">
+      <summary>Provenance</summary>
+      ${renderProvenanceTable(prov)}
+    </details>
+  `;
+
+  card.append(head, aliases, provWrap);
+  return card;
+}
+
+function renderProvenanceTable(rows) {
+  if (!rows || !rows.length) {
+    return `<div class="prov-empty">No provenance linked yet.</div>`;
+  }
+
+  // sort by (jurisdiction desc Jersey first), then score desc
+  const sorted = [...rows].sort((a,b) => {
+    const aj = (a.jurisdiction || "").toLowerCase();
+    const bj = (b.jurisdiction || "").toLowerCase();
+    if (aj.includes("jersey") !== bj.includes("jersey")) return aj.includes("jersey") ? -1 : 1;
+    const as = Number.isFinite(a.score) ? a.score : -Infinity;
+    const bs = Number.isFinite(b.score) ? b.score : -Infinity;
+    return bs - as;
+  });
+
+  const head = `
+    <thead>
+      <tr>
+        <th>Jurisdiction</th>
+        <th>Source</th>
+        <th>Case / Citation</th>
+        <th>Page</th>
+        <th>Line</th>
+        <th>Score</th>
+      </tr>
+    </thead>`;
+
+  const body = sorted.map(r => `
+    <tr>
+      <td>${escapeHTML(r.jurisdiction || "")}</td>
+      <td>${escapeHTML(r.source || "")}</td>
+      <td>${r.url ? safeLink(r.url, r.citation || r.title || "link") : escapeHTML(r.citation || r.title || "")}</td>
+      <td>${escapeHTML(r.page || "")}</td>
+      <td>${escapeHTML(r.line || "")}</td>
+      <td>${r.score === "" || r.score == null ? "" : escapeHTML(String(r.score))}</td>
+    </tr>
+    ${r.snippet ? `<tr class="snippet-row"><td colspan="6"><div class="snippet">${escapeHTML(r.snippet)}</div></td></tr>` : ""}
+  `).join("");
+
+  return `<div class="table-wrap"><table class="prov-table">${head}<tbody>${body}</tbody></table></div>`;
+}
+
+// -------- filtering
+function attachFilter() {
+  const input = qs("#filterBox");
+  const cards = () => qsa(".card");
+
+  function apply() {
+    const q = lower(input.value);
+    if (!q) {
+      cards().forEach(c => c.classList.remove("hide"));
+      return;
+    }
+    const parts = q.split(/\s+/).filter(Boolean);
+    cards().forEach(c => {
+      const hay = [
+        c.dataset.tag,
+        c.dataset.category,
+        c.dataset.aliases
+      ].join(" ");
+      const ok = parts.every(p => hay.includes(p));
+      c.classList.toggle("hide", !ok);
     });
-    return `<ul class="kv-list">${rows.join('')}</ul>`;
   }
 
-  function renderStatuteList(stats) {
-    if (!Array.isArray(stats) || stats.length === 0) {
-      return `<p class="muted">No statutes linked.</p>`;
-    }
-    const rows = stats.map(st => `
-      <li class="kv">
-        <span class="stat">${st.id || ''}</span>
-        <span class="badge">score ${fmtScore(st.score)}</span>
-      </li>
-    `);
-    return `<ul class="kv-list">${rows.join('')}</ul>`;
+  input.addEventListener("input", apply);
+}
+
+// -------- helpers
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&nbsp;&amp;','<':'&nbsp;&lt;','>':'&nbsp;&gt;','"':'&quot;'}[c]).replace("&nbsp;",""));
+}
+
+// small deterministic hash for element IDs
+function hash(s) {
+  let h = 2166136261 >>> 0;
+  for (let i=0;i<s.length;i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
+  return (h >>> 0).toString(36);
+}
 
-  function card(item) {
-    const aliases = (item.aliases || []).join(', ');
-    // Use <details> to keep provenance folded by default
-    return `
-      <article class="card">
-        <h3 class="tag">${item.tag || ''}</h3>
-        <div class="meta">
-          <div><span class="label">Category:</span> ${item.category || ''}</div>
-          <div><span class="label">Aliases:</span> ${aliases || '<span class="muted">—</span>'}</div>
-        </div>
-
-        <details class="prov">
-          <summary>Provenance</summary>
-          <div class="prov-grid">
-            <section>
-              <h4>Supporting cases</h4>
-              ${renderCaseList(item.sources)}
-            </section>
-            <section>
-              <h4>Statutes</h4>
-              ${renderStatuteList(item.statutes)}
-            </section>
-          </div>
-        </details>
-      </article>
-    `;
+// -------- boot
+(async function init() {
+  try {
+    const data = await loadData();
+    renderCards(data);
+    attachFilter();
+  } catch (err) {
+    console.error(err);
+    qs("#cards").innerHTML = `
+      <div class="error">
+        <strong>Failed to load data.</strong><br/>
+        ${escapeHTML(err.message || err)}
+      </div>`;
   }
-
-  function render(list) {
-    LIST_EL.innerHTML = list.map(card).join('') || `<p class="muted">No breaches.</p>`;
-    META_EL.textContent = `${list.length} breach tags • provenance shown without snippets`;
-  }
-
-  function onFilter() {
-    const q = FILTER_EL.value.trim();
-    const view = BREACHES.filter(b => matchesFilter(b, q));
-    render(view);
-  }
-
-  async function boot() {
-    try {
-      BREACHES = await loadBreaches();
-      // Deterministic sort: tag asc
-      BREACHES.sort((a, b) => (a.tag || '').localeCompare(b.tag || ''));
-      render(BREACHES);
-    } catch (err) {
-      LIST_EL.innerHTML = `<p class="error">Error: ${String(err)}</p>`;
-      console.error(err);
-    }
-  }
-
-  FILTER_EL.addEventListener('input', onFilter);
-  boot();
 })();
