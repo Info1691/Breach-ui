@@ -1,46 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Breach Tag Manager</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="icon" href="logo.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="site-header">
+  <header class="topbar">
     <div class="brand">
-      <img src="logo.png" alt="BB" />
+      <span class="logo">BB</span>
       <h1>Breach Tag Manager</h1>
     </div>
-    <nav>
-      <a class="btn" href="https://github.com/Info1691/Breach-ui" target="_blank" rel="noopener">Repo</a>
-    </nav>
+    <a class="repo-btn" target="_blank" rel="noopener" href="https://github.com/Info1691/Breach-ui">Repo</a>
   </header>
 
   <main class="container">
     <section class="editor">
       <h2>Add / Edit Breach</h2>
-      <form id="edit-form" onsubmit="return false;">
-        <input id="in-category" type="text" placeholder="Category" />
-        <input id="in-tag" type="text" placeholder="Canonical Tag" />
-        <input id="in-aliases" type="text" placeholder="Aliases (comma-separated)" />
-        <button id="btn-add" class="btn">Add / Update</button>
+      <form id="editForm" onsubmit="return false;">
+        <input id="catInput" class="text" placeholder="Category" />
+        <input id="tagInput" class="text" placeholder="Canonical Tag" />
+        <input id="aliasesInput" class="text" placeholder="Aliases (comma-separated)" />
+        <button class="btn" disabled title="Read-only UI">Add / Update</button>
       </form>
-      <p class="note">This UI is read-only for now; use PRs to modify <code>breaches.json</code>.</p>
+      <p class="readonly-note">This UI is read-only for now; use PRs to modify <code>breaches.json</code>.</p>
     </section>
 
-    <section class="list">
-      <div class="list-header">
-        <h2>Current Breach Tags</h2>
-        <input id="filter" type="search" placeholder="Filter by tag, category, alias…" />
-      </div>
-      <div id="breach-list" class="cards"></div>
+    <section class="list-header">
+      <h2>Current Breach Tags</h2>
+      <input id="filterBox" class="text filter" placeholder="Filter by tag, category, alias…" />
     </section>
+
+    <section id="cards" class="cards" aria-live="polite"></section>
   </main>
 
-  <footer class="site-footer">
-    <span id="meta"></span>
+  <footer class="foot">
+    <small>
+      Data sources: <code>breaches.json</code> (canonical tags) &nbsp;·&nbsp;
+      <code>breaches_ui.json</code> (provenance, auto-generated from LTJ).
+    </small>
   </footer>
 
   <script src="main.js"></script>
