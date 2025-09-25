@@ -1,110 +1,128 @@
-/* Full, data-sided renderer for breaches.json with provenance */
-
-async function loadBreaches() {
-  // Load breaches.json from repo root; no dummy data used.
-  const res = await fetch('./breaches.json', { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Failed to fetch breaches.json: ${res.status}`);
-  const data = await res.json();
-  if (!Array.isArray(data)) throw new Error('breaches.json must be an array');
-  return data;
+async function fetchJSON(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
+  return res.json();
 }
 
-function el(tag, attrs={}, ...kids){
-  const n = document.createElement(tag);
-  for (const [k,v] of Object.entries(attrs)) {
-    if (k === 'class') n.className = v;
-    else if (k === 'text') n.textContent = v;
-    else if (k.startsWith('on') && typeof v === 'function') n.addEventListener(k.slice(2), v);
-    else n.setAttribute(k, v);
+function normaliseSources(entry) {
+  // Accept either `sources` or `provenance`
+  const list = Array.isArray(entry.sources) ? entry.sources
+              : Array.isArray(entry.provenance) ? entry.provenance
+              : [];
+  // Light normalisation (defensive)
+  return list.map(s => ({
+    ref: (s.ref || s.id || s.case_id || "").toString(),
+    label: s.label || s.case_name || "",
+    book: s.book || s.book_id || "",
+    page: s.page || "",
+    line: s.line || s.loc || "",
+    rule: s.rule || "",
+    statute: s.statute || "",
+    score: s.score != null ? s.score : "",
+    snippet: s.snippet || s.note || ""
+  }));
+}
+
+function badge(text) {
+  const span = document.createElement('span');
+  span.className = 'badge';
+  span.textContent = text;
+  return span;
+}
+
+function makeProvenance(details, sources) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'prov-wrapper';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'prov-toggle';
+  btn.textContent = 'Provenance';
+  details.appendChild(btn);
+
+  const panel = document.createElement('div');
+  panel.className = 'prov-panel';
+  if (!sources.length) {
+    panel.innerHTML = `<div class="prov-empty">No sources yet.</div>`;
+  } else {
+    const ul = document.createElement('ul');
+    ul.className = 'prov-list';
+    for (const s of sources) {
+      const li = document.createElement('li');
+      const head = [];
+      if (s.label) head.push(s.label);
+      if (s.ref) head.push(`(${s.ref})`);
+      const meta = [];
+      if (s.book) meta.push(`book: ${s.book}`);
+      if (s.page) meta.push(`page: ${s.page}`);
+      if (s.line) meta.push(`line: ${s.line}`);
+      if (s.rule) meta.push(`rule: ${s.rule}`);
+      if (s.statute) meta.push(`statute: ${s.statute}`);
+      if (s.score !== "") meta.push(`score: ${s.score}`);
+      li.innerHTML = `
+        <div class="prov-head">${head.join(' ')}</div>
+        ${meta.length ? `<div class="prov-meta">${meta.join(' · ')}</div>` : ''}
+        ${s.snippet ? `<div class="prov-snippet">“${s.snippet}”</div>` : ''}
+      `;
+      ul.appendChild(li);
+    }
+    panel.appendChild(ul);
   }
-  for (const k of kids) n.append(k);
-  return n;
+  wrapper.appendChild(panel);
+
+  btn.addEventListener('click', () => {
+    panel.classList.toggle('open');
+  });
+
+  return wrapper;
 }
 
-function chip(txt){ return el('span',{class:'badge',text:txt}); }
+function renderBreach(entry) {
+  const card = document.createElement('div');
+  card.className = 'breach-card';
 
-function renderProvList(prov){
-  if (!Array.isArray(prov) || prov.length === 0){
-    return el('div',{class:'prov'}, el('div',{class:'prov-excerpt',text:'No sources yet.'}));
-  }
-  const ul = el('ul',{class:'prov-list'});
-  for (const p of prov){
-    const head = el('div',{class:'prov-head'},
-      el('span',{class:'prov-type',text: (p.source_type||'treatise') }),
-      el('span',{class:'prov-label',text: p.label || p.source_id || 'Source' }),
-      el('span',{class:'prov-conf',text: ((+p.confidence||0)*100).toFixed(0)+'%' }),
-    );
-    const metaParts = [];
-    if (p.block_id) metaParts.push(p.block_id);
-    if (p.page != null) metaParts.push('p.'+p.page);
-    if (p.line != null) metaParts.push('l.'+p.line);
-    const meta = el('div',{class:'prov-meta',text: metaParts.join(' · ') || ''});
-    const excerpt = el('div',{class:'prov-excerpt',text: p.excerpt || ''});
-    const li = el('li',{class:'prov-item'}, head, meta, excerpt);
-    ul.append(li);
-  }
-  return el('div',{class:'prov'}, ul);
+  const title = document.createElement('div');
+  title.className = 'breach-title';
+  title.textContent = entry.tag || '(untitled)';
+  card.appendChild(title);
+
+  const sub = document.createElement('div');
+  sub.className = 'breach-sub';
+  const aliases = Array.isArray(entry.aliases) ? entry.aliases.join(', ') : '';
+  sub.textContent = aliases ? `Aliases: ${aliases}` : '';
+  card.appendChild(sub);
+
+  const meta = document.createElement('div');
+  meta.className = 'breach-meta';
+  if (entry.category) meta.appendChild(badge(entry.category));
+  const srcs = normaliseSources(entry);
+  meta.appendChild(badge(`${srcs.length} ${srcs.length === 1 ? 'source' : 'sources'}`));
+  card.appendChild(meta);
+
+  const prov = document.createElement('div');
+  prov.className = 'breach-prov';
+  prov.appendChild(makeProvenance(prov, srcs));
+  card.appendChild(prov);
+
+  return card;
 }
 
-function renderCard(b){
-  const count = Array.isArray(b.provenance) ? b.provenance.length : 0;
+async function boot() {
+  const container = document.getElementById('breach-list');
+  container.innerHTML = '';
 
-  const headL = el('div',{}, el('div',{class:'title',text: b.tag || '(untitled)'}));
-  const headR = el('div',{class:'badges'},
-    chip(b.category || '—'),
-    chip(`${count} source${count===1?'':'s'}`)
-  );
-  const head = el('div',{class:'card-head'}, headL, headR);
+  const data = await fetchJSON('breaches.json');
+  // sort: category, tag
+  data.sort((a, b) => {
+    const ca = (a.category || '').toLowerCase(), cb = (b.category || '').toLowerCase();
+    if (ca !== cb) return ca < cb ? -1 : 1;
+    const ta = (a.tag || '').toLowerCase(), tb = (b.tag || '').toLowerCase();
+    return ta < tb ? -1 : (ta > tb ? 1 : 0);
+  });
 
-  const aliases = Array.isArray(b.aliases) && b.aliases.length
-    ? el('div',{class:'aliases',text:'Aliases: '+b.aliases.join(', ')})
-    : el('div',{class:'aliases',text:'Aliases: —'});
-
-  const provBtn = el('button',{class:'btn small prov-btn',text:'Provenance'});
-  const provBox = renderProvList(b.provenance);
-  provBox.classList.add('hidden');
-  provBtn.onclick = () => { provBox.classList.toggle('hidden'); };
-
-  return el('div',{class:'card'}, head, aliases, provBtn, provBox);
-}
-
-function normalize(s){ return (s||'').toString().toLowerCase(); }
-
-function matchesQuery(b, q){
-  if (!q) return true;
-  const hay = [
-    b.tag || '',
-    b.category || '',
-    ...(Array.isArray(b.aliases)? b.aliases : [])
-  ].join(' ').toLowerCase();
-  return hay.includes(q);
-}
-
-function renderList(data, q){
-  const list = document.getElementById('list');
-  const empty = document.getElementById('empty');
-  list.innerHTML = '';
-  const qn = normalize(q);
-  const results = data.filter(b => matchesQuery(b, qn));
-  if (results.length === 0){
-    empty.classList.remove('hidden'); return;
-  }
-  empty.classList.add('hidden');
-  for (const b of results) list.append( renderCard(b) );
-}
-
-async function main(){
-  try{
-    const data = await loadBreaches();
-    const q = document.getElementById('q');
-    renderList(data, q.value);
-    q.addEventListener('input', () => renderList(data, q.value));
-  }catch(err){
-    const list = document.getElementById('list');
-    list.innerHTML = '';
-    const div = el('div',{class:'empty', text:String(err.message||err)});
-    list.append(div);
+  for (const entry of data) {
+    container.appendChild(renderBreach(entry));
   }
 }
 
-document.addEventListener('DOMContentLoaded', main);
+document.addEventListener('DOMContentLoaded', boot);
