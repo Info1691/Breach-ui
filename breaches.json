@@ -1,53 +1,8 @@
 [
   {
-    "category": "Fiduciary Duty",
-    "tag": "Breach of fiduciary duty",
-    "aliases": [
-      "fiduciary conflict",
-      "breach of trust",
-      "conflicted trustee",
-      "acting in self-interest"
-    ],
-    "provenance": [
-      {
-        "source_type": "Case",
-        "label": "Zhang v DBS Trust Company (Jersey) Ltd [2019] JRC 037",
-        "source_id": "JRC 037",
-        "block_id": "para. 54",
-        "page": 12,
-        "line": 5,
-        "excerpt": "A trustee who prefers their own interests above those of the beneficiaries breaches their fiduciary duty.",
-        "confidence": 0.98
-      },
-      {
-        "source_type": "Statute",
-        "label": "Trusts (Jersey) Law 1984, Art. 21",
-        "source_id": "TJL1984-21",
-        "page": 4,
-        "line": 12,
-        "excerpt": "A trustee shall, in the execution of their duties and in the exercise of their powers and discretions, act with due diligence and as would a prudent person.",
-        "confidence": 0.95
-      }
-    ]
-  },
-  {
-    "category": "Legal Duty",
-    "tag": "Breach of mandatory duty",
-    "aliases": [
-      "failure to act",
-      "ignored obligation",
-      "non-compliance with law"
-    ],
-    "provenance": [
-      {
-        "source_type": "Regulation",
-        "label": "JFSC Code of Practice for Trust Company Business, 6.4.14",
-        "source_id": "JFSC-6.4.14",
-        "page": 21,
-        "line": 2,
-        "excerpt": "A trustee must notify the Commission if involved in litigation in any court.",
-        "confidence": 0.97
-      }
-    ]
+    "category": "Uncategorized",
+    "tag": "candidates",
+    "aliases": [],
+    "provenance": []
   }
 ]
